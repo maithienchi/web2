@@ -1,0 +1,82 @@
+<%- include('header_salaib', { title: 'Xác nhận Tất toán tài khoản tiền gửi có kỳ hạn'}); -%>
+<div class="breadcrumb_sala">
+    <a>Trang chủ</a>
+    <span class="split"> / </span>
+    <a>Tiền gửi</a>
+    <span class="split"> / </span>
+    <a>Tiền gửi có kỳ hạn</a>
+    <span class="split last"> / </span>
+    <a>Xác nhận tất toán</a>
+</div>
+<div class="main_con">
+    <ul class="main_con_ul">
+        <li class="main_con_item">
+            <ul>
+                <li class="">
+                    <h1 class="title">XÁC NHẬN TẤT TOÁN TÀI KHOẢN</h1>
+                    <div class="con">
+                        <form method="POST" class="form-light">
+                            <div class="table-responsive rounded-top">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="3" scope="col" class="text-left" style="padding-left: .5rem;">
+                                                THÔNG TIN TẤT TOÁN TÀI KHOẢN TIỀN GỬI CÓ KÌ HẠN
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">Số tài khoản tất toán </th>
+                                            <input type="hidden" id="tktattoan" name="tktattoan"
+                                                value="<%= tktattoan %>">
+                                            <input type="hidden" id="sotienTattoan" name="sotienTattoan"
+                                                value="<%= sotientattoan %>">
+                                            <td><b><%= tktattoan %></td></b>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Chuyển tiền vào tài khoản tiền gửi thanh toán </th>
+                                            <input type="hidden" id="tkthanhtoan" name="tkthanhtoan"
+                                                value="<%= tkthanhtoan %>">
+                                            <td><b><%= tkthanhtoan %></td></b>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                    <thead>
+                                        <tr>
+                                            <th colspan="3" scope="col" class="text-left rounded-top"
+                                                style="padding-left: .5rem; border-top:none">
+                                                XÁC THỰC GIAO DỊCH
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td scope="row">Nhập mật khẩu đăng nhập</td>
+                                            <td><input type="password" name="auth_password" value="" size="31"
+                                                    class="form-control form-control-sm col-md-8" required>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="table-sl-btn-form" style="background-color: white; padding-top: 1rem;">
+                                <a type="button" name="btnGoback_f" value="btnGoback_f"
+                                    class="btn btn-primary btn-secondary" href="javascript:history.go(-2)"
+                                    style="padding: .2rem 1.5rem .2rem 1.5rem;">Quay lại</a>
+                                <button type="submit" name="btnAuthOK_f" value="btnAuthOK_f"
+                                    class="btn btn-primary btn-danger" style="padding: .2rem 1.5rem .2rem 1.5rem;">
+                                    Xác nhận</button>
+                                <a type="button" class="btn btn-primary btn-secondary" href="/"
+                                    style="padding: .2rem 1.5rem .2rem 1.5rem;">Hủy giao dịch</a>
+                            </div>
+                        </form>
+                    </div>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>
+<%- include('footer_salaib'); -%>

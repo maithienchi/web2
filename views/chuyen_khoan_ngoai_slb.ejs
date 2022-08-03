@@ -1,0 +1,259 @@
+<%- include('header_salaib', { title: 'Chuyển khoản ngoài SLB'}); -%>
+<div class="breadcrumb_sala">
+    <a>Trang chủ</a>
+    <span class="split"> / </span>
+    <a>Chuyển tiền</a>
+    <span class="split last"> / </span>
+    <a>Chuyển khoản ngoài SLB</a>
+</div>
+<div class="main_con">
+    <ul class="main_con_ul">
+        <li class="main_con_item">
+            <ul>
+                <li class="">
+                    <h1 class="title">CHUYỂN KHOẢN NGOÀI HỆ THỐNG SLB</h1>
+                    <div class="con">
+                        <% if (errors) { %>
+                        <div id="error">
+                            <err>
+                                <p>Lỗi:<br>
+                                    <% for (let i=0;i<errors.length;i++) { %>
+                                    &emsp;&emsp;<%= (i+1) + '. ' + errors[i] %>
+                                    <br>
+                                    <% } %>
+                                </p>
+                            </err>
+                        </div>
+                        <% } %>
+                        <form method="POST" class="form-light">
+                            <div class="table-responsive rounded-top">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="3" scope="col" class="text-left" style="padding-left: .5rem;">
+                                                THÔNG TIN ĐƠN VỊ CHUYỂN TIỀN
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">Chọn tài khoản trích tiền <span
+                                                    style="color: red;">(*)</span></th>
+                                            <td>
+                                                <select
+                                                    class="form-control form-control-sm col-md-8 <%= errors_code ? errors_code.includes(1) ? 'alert_box_error': '' : '' %>"
+                                                    id="tktrichtien" name="tktrichtien" onchange="checkStep()">
+                                                    <option></option>
+                                                    <% for (let i=0;i<account.length;i++) { %>
+                                                    <option value="<%= account[i].account_number %>"
+                                                        <%= account[i].account_number == account_selected ? 'selected' : ''  %>>
+                                                        <%= account[i].account_number %>
+                                                    </option>
+                                                    <% } %>
+                                                </select>
+                                                <% if (tktrichtien){ %>
+                                                <div class="show_detail_account">
+                                                    <%= tktrichtien.product + ' ' + '- Số dư: ' + new Intl.NumberFormat('vi').format(tktrichtien.available_balance).replace(/,/g, '.') + ' ' + tktrichtien.currency %>
+                                                </div>
+                                                <% } %>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                    <thead>
+                                        <tr>
+                                            <th colspan="3" scope="col" class="text-left rounded-top"
+                                                style="padding-left: .5rem; border-top:none">
+                                                THÔNG TIN ĐƠN VỊ THỤ HƯỞNG
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">Ngân hàng <span style="color: red;">(*)</span></th>
+                                            <td>
+                                                <select
+                                                    class="form-control form-control-sm col-md-7 select2 select-nganhang <%= errors_code ? errors_code.includes(2) ? 'alert_box_error': '' : '' %>"
+                                                    id="nganhang" name="nganhang">
+                                                    <option value="0">Chọn ngân hàng...</option>
+                                                    <% for (let i=0;i<banks.length;i++) { %>
+                                                    <option value="<%= banks[i].bankId %>"
+                                                        <%= nganhang == banks[i].bankId ? 'selected' : '' %>>
+                                                        <%= banks[i].bankId + ' - ' + banks[i].bankName %>
+                                                    </option>
+                                                    <% } %>
+                                                </select>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Nhập số tài khoản thụ hưởng <span
+                                                    style="color: red;">(*)</span></th>
+                                            <td>
+                                                <input type="text"
+                                                    class="form-control form-control-sm col-md-8 <%= errors_code ? errors_code.includes(2) ? 'alert_box_error': '' : '' %>"
+                                                    id="tkthuhuong" name="tkthuhuong" value="<%= tkthuhuong %>">
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Tên đơn vị thụ hưởng <span style="color: red;">(*)</span>
+                                            </th>
+                                            <td>
+                                                <input type="text"
+                                                    class="form-control form-control-sm col-md-8 <%= errors_code ? errors_code.includes(2) ? 'alert_box_error': '' : '' %>"
+                                                    id="tendvthuhuong" name="tendvthuhuong"
+                                                    value="<%= tendvthuhuong ? tendvthuhuong.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, 'd').replace(/Đ/g, 'D').toUpperCase() : '' %>">
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                    <thead>
+                                        <tr>
+                                            <th colspan="3" scope="col" class="text-left rounded-top"
+                                                style="padding-left: .5rem; border-top:none">
+                                                THÔNG TIN CHUYỂN KHOẢN
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">Số tiền <span style="color: red;">(*)</span></th>
+                                            <td>
+                                                <input type="text"
+                                                    class="form-control form-control-sm col-md-8 <%= errors_code ? errors_code.includes(4) ? 'alert_box_error': '' : '' %>"
+                                                    onkeypress="return isNumberKey(event);"
+                                                    onchange="this.value = changeAmount(this.value);" maxlength="18"
+                                                    id="sotien" name="sotien" value="<%= sotien %>">
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Số tiền bằng chữ</th>
+                                            <td>
+                                                <textarea cols="" rows="" class="form-control form-control-sm col-md-8"
+                                                    wrap="soft" id="sotienbangchu" name="sotienbangchu"
+                                                    readonly></textarea>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Phí giao dịch</th>
+                                            <td>
+                                                <input type="text" class="form-control form-control-sm col-md-8"
+                                                    id="phigd" name="phigd"
+                                                    value="<%= new Intl.NumberFormat('vi').format(phigd) %>" readonly>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Số tiền phí bằng chữ</th>
+                                            <td>
+                                                <textarea type="text" class="form-control form-control-sm col-md-8"
+                                                    id="sotienphigdbangchu" name="sotienphigdbangchu"
+                                                    readonly></textarea>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td id="chiuphi">
+                                                <input type="radio" <%= chkd_NhanChiuPhi=='N' ? 'checked' : '' %>
+                                                    name="NhanChiuPhiYN" value="N" id="isnhasn1">
+                                                <label for="isnhasn1">
+                                                    Đơn vị chuyển tiền chịu phí
+                                                </label><br>
+                                                <input type="radio" <%= chkd_NhanChiuPhi=='Y' ? 'checked' : '' %>
+                                                    name="NhanChiuPhiYN" value="Y" id="isnhsan2">
+                                                <label for="isnhsan2">
+                                                    Đơn vị thụ thưởng chịu phí
+                                                </label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Nội dung giao dịch</th>
+                                            <td>
+                                                <textarea class="form-control form-control-sm col-md-8" wrap="soft"
+                                                    id="noidunggd" name="noidunggd" placeholder="Vui lòng không gõ dấu!"
+                                                    onkeyup="return checkLength(this.form);"><%= content ? content.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, 'd').replace(/Đ/g, 'D').toUpperCase() : '' %></textarea>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                    <thead>
+                                        <tr>
+                                            <th colspan="3" scope="col" class="text-left rounded-top"
+                                                style="padding-left: .5rem; border-top:none">
+                                                THỜI GIAN CHUYỂN
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">
+                                                <div class="custom-control custom-radio">
+                                                    <input type="radio" id="chuyenkhoanngay" name="chuyenkhoanngay"
+                                                        class="custom-control-input" checked="">
+                                                    <label class="custom-control-label active" for="chuyenkhoanngay"
+                                                        style="padding-top: .3rem;">Chuyển khoản ngay</label>
+                                                </div>
+                                            </th>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                    <thead>
+                                        <tr>
+                                            <th colspan="3" scope="col" class="text-left rounded-top"
+                                                style="padding-left: .5rem; border-top:none">
+                                                PHƯƠNG PHÁP XÁC THỰC
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">Chọn phương pháp xác thực <span
+                                                    style="color: red;">(*)</span></th>
+                                            <td>
+                                                <select
+                                                    class="form-control form-control-sm col-md-8 <%= errors_code ? errors_code.includes(5) ? 'alert_box_error': '' : '' %>"
+                                                    id="ppxacthuc" name="ppxacthuc">
+                                                    <option></option>
+                                                    <option>Mật khẩu tĩnh + Email</option>
+                                                </select>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="table-sl-btn-form" style="background-color: white; padding-top: 1rem;">
+                                <button type="submit" class="btn btn-primary btn-secondary d-none"
+                                    style="padding: .2rem 2.5rem .2rem 2.5rem;" id="btnStep" name="btnStep"
+                                    value="btnStep">Step</button>
+                                <button type="submit" class="btn btn-primary btn-danger"
+                                    style="padding: .2rem 2.5rem .2rem 2.5rem;" id="ck_ngoai_btnOK"
+                                    name="ck_ngoai_btnOK">Đồng ý</button>
+                                <a type="button" class="btn btn-primary btn-secondary" href="/"
+                                    style="padding: .2rem 2.5rem .2rem 2.5rem;">Hủy</a>
+                            </div>
+                        </form>
+                        <div class="luu-y">
+                            <span style="color: red; font-weight: bold;">Lưu ý:</span>
+                            <br>
+                            - <span style="color: red;">(*)</span>: Bắt buộc.
+                            <br>
+                            - Khi chọn Đơn vị thụ hưởng chịu phí, số tiền phí sẽ được trừ vào số tiền chuyển.
+                            <br>
+                            - Giao dịch chuyển khoản cho cá nhân nước ngoài: chỉ thực hiện giao dịch chuyển lương và
+                            công tác phí. Các giao dịch này phải có chứng từ chứng minh theo quy định
+                            <br>
+                            <br>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>
+<%- include('footer_salaib'); -%>
